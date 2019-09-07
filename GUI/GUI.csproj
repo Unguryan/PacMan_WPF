@@ -55,6 +55,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="View\GameWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,9 +67,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BLL\Extention.cs" />
+    <Compile Include="BLL\MazeRead.cs" />
+    <Compile Include="BLL\Interfaces\IGame.cs" />
+    <Compile Include="BLL\Interfaces\IPlayer.cs" />
+    <Compile Include="Model\Cell.cs" />
+    <Compile Include="Model\Enemy.cs" />
+    <Compile Include="Model\Player.cs" />
     <Compile Include="ViewModel\EndWindowViewModel.cs" />
     <Compile Include="ViewModel\GameWindowViewModel.cs" />
     <Compile Include="ViewModel\StartWindowViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\GameWindow.xaml.cs">
+      <DependentUpon>GameWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -98,7 +113,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
+    <Resource Include="BLL\Levels\Level1.txt" />
+    <Resource Include="BLL\Levels\Level2.txt" />
+    <Resource Include="BLL\Levels\Level3.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

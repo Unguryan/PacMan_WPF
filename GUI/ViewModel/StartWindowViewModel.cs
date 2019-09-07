@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace GUI.ViewModel
 {
-    public class StartWindowViewModel
+    public class StartWindowViewModel : ViewModelBase
     {
     }
+
+
 }
