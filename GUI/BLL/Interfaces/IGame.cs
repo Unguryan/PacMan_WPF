@@ -63,7 +63,7 @@ namespace GUI.BLL.Interfaces
         ///<summary>
         ///This Key is need to remember the last key pressed.
         ///</summary>
-        object KeyPressed { get; set; }
+        Key KeyPressed { get; set; }
         ///<summary>
         ///This thread is necessary for the proper movement of enemies.
         ///</summary>
@@ -81,6 +81,8 @@ namespace GUI.BLL.Interfaces
         ///This method is designed to run the game.
         ///</summary>
         void Start();
+
+        void StartAsync();
 
         ///<summary>
         ///The method is needed to restart the level.

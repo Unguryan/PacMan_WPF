@@ -23,5 +23,6 @@ namespace GUI.View
         {
             InitializeComponent();
         }
+
     }
 }

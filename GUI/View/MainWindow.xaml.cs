@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GUI
+namespace GUI.View
 {
     /// <summary>
     /// Логика взаимодействия для MainWindow.xaml
@@ -24,5 +24,6 @@ namespace GUI
         {
             InitializeComponent();
         }
+
     }
 }

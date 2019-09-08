@@ -35,8 +35,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GalaSoft.MvvmLight, Version=5.3.0.19026, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\GalaSoft.MvvmLight.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Extras, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=669f0b5e8f868abf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\GalaSoft.MvvmLight.Extras.dll</HintPath>
+    </Reference>
+    <Reference Include="GalaSoft.MvvmLight.Platform, Version=5.3.0.19032, Culture=neutral, PublicKeyToken=5f873c45e98af8a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\GalaSoft.MvvmLight.Platform.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\System.Windows.Interactivity.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -68,16 +84,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BLL\Extention.cs" />
+    <Compile Include="BLL\Game.cs" />
     <Compile Include="BLL\MazeRead.cs" />
     <Compile Include="BLL\Interfaces\IGame.cs" />
     <Compile Include="BLL\Interfaces\IPlayer.cs" />
+    <Compile Include="EventToCommandBehavior.cs" />
     <Compile Include="Model\Cell.cs" />
     <Compile Include="Model\Enemy.cs" />
     <Compile Include="Model\Player.cs" />
+    <Compile Include="ActionCommand.cs" />
     <Compile Include="ViewModel\EndWindowViewModel.cs" />
     <Compile Include="ViewModel\GameWindowViewModel.cs" />
     <Compile Include="ViewModel\StartWindowViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\GameWindow.xaml.cs">
       <DependentUpon>GameWindow.xaml</DependentUpon>
     </Compile>
@@ -116,6 +134,9 @@
     <Resource Include="BLL\Levels\Level1.txt" />
     <Resource Include="BLL\Levels\Level2.txt" />
     <Resource Include="BLL\Levels\Level3.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

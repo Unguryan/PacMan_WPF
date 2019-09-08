@@ -1,194 +1,136 @@
-﻿using GUI.BLL;
+﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.CommandWpf;
+using GUI.BLL;
 using GUI.BLL.Interfaces;
 using GUI.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace GUI.ViewModel
 {
-    public class GameWindowViewModel : ViewModelBase, IGame
+
+    public class GameWindowViewModel : ViewModelBase, INotifyPropertyChanged
     {
+        public string mazeString;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public IGame Game { get; set; }
+
         public GameWindowViewModel()
         {
-            Player = new Player(this);
-            Player.Died += Died;
-            Level = 1;
+
+            Game = new Game();
+            Game.Show += Game_Show;
+            Game.CompleteLevel += Game_CompleteLevel;
+            Game.EndLevels += Game_EndLevels;
+            Game.RestartLevel += Game_RestartLevel;
         }
 
-        private bool moveEnemy;
-
-        public IPlayer Player { get; set; }
-        public int Level { get; set; }
-        public Thread MoveEnemies { get; set; }
-        public bool InGame { get; set; }
-        public Cell[][] Maze { get; set; }
-        public List<Enemy> Enemies { get; set; }
-        public object KeyPressed { get; set; }
-
-        public event ShowMaze Show;
-        public event GamePlay CompleteLevel;
-        public event GamePlay EndLevels;
-        public event GamePlay RestartLevel;
-        public event MovePlayer UpPlayer;
-        public event MovePlayer DownPlayer;
-        public event MovePlayer LeftPlayer;
-        public event MovePlayer RightPlayer;
-
-        public void Died()
+        private void Game_RestartLevel()
         {
-            Maze = MazeRead.ReadLevel(Level);
-            MoveEnemies.Abort();
-            Level = 1;
-            InGame = false;
-            moveEnemy = false;
-            KeyPressed = null;
-            RestartLevel();
-            Start();
+            MessageBox.Show("You Died. (Press \"Ok\" to restart.)", "Died", MessageBoxButton.OK);
         }
 
-        private void MoveEnemy()
+        private void Game_EndLevels()
         {
-            CreateEnemies();
-            while (moveEnemy)
+            MessageBox.Show("Levels are over.\nScore: " + Game.Player.Score, "Completed!", MessageBoxButton.OK);
+            Environment.Exit(0);
+        }
+
+        private void Game_CompleteLevel()
+        {
+            MessageBox.Show("Levels Completed. (Press \"Ok\" to go next.)", "Completed!", MessageBoxButton.OK);
+        }
+
+        private void Game_Show(Cell[][] Maze)
+        {
+            mazeString = null;
+
+            for (int i = 0; i < Maze.Length; i++)
             {
-                if (Enemies.Count != 0)
+                for (int j = 0; j < Maze[i].Length; j++)
                 {
-                    foreach (Enemy e in Enemies)
+                    switch (Maze[i][j])
                     {
-                        Random r = new Random();
-                        switch (r.Next(0, 5))
-                        {
-                            case 1:
-                                if (Maze[e.CurrentCoords[0] - 1][e.CurrentCoords[1]] != Cell.Wall)
-                                    e.Game_Up(Maze);
-                                else if (Maze[e.CurrentCoords[0]][e.CurrentCoords[1] - 1] != Cell.Wall)
-                                    e.Game_Left(Maze);
-                                else if (Maze[e.CurrentCoords[0]][e.CurrentCoords[1] + 1] != Cell.Wall)
-                                    e.Game_Right(Maze);
-                                break;
-                            case 2:
-                                if (Maze[e.CurrentCoords[0]][e.CurrentCoords[1] - 1] != Cell.Wall)
-                                    e.Game_Left(Maze);
-                                else if (Maze[e.CurrentCoords[0] + 1][e.CurrentCoords[1]] != Cell.Wall)
-                                    e.Game_Down(Maze);
-                                else if (Maze[e.CurrentCoords[0] - 1][e.CurrentCoords[1]] != Cell.Wall)
-                                    e.Game_Up(Maze);
-                                break;
-                            case 3:
-                                if (Maze[e.CurrentCoords[0] + 1][e.CurrentCoords[1]] != Cell.Wall)
-                                    e.Game_Down(Maze);
-                                else if (Maze[e.CurrentCoords[0]][e.CurrentCoords[1] + 1] != Cell.Wall)
-                                    e.Game_Right(Maze);
-                                else if (Maze[e.CurrentCoords[0]][e.CurrentCoords[1] - 1] != Cell.Wall)
-                                    e.Game_Left(Maze);
-                                break;
-                            case 4:
-                                if (Maze[e.CurrentCoords[0]][e.CurrentCoords[1] + 1] != Cell.Wall)
-                                    e.Game_Right(Maze);
-                                else if (Maze[e.CurrentCoords[0] - 1][e.CurrentCoords[1]] != Cell.Wall)
-                                    e.Game_Up(Maze);
-                                else if (Maze[e.CurrentCoords[0] + 1][e.CurrentCoords[1]] != Cell.Wall)
-                                    e.Game_Down(Maze);
-                                break;
-                        }
+                        case Cell.Empty:
+                            mazeString += "  ";
+                            break;
+                        case Cell.Wall:
+                            mazeString += "▌";
+                            break;
+                        case Cell.Enemy:
+                            mazeString += "x";
+                            break;
+                        case Cell.Exit:
+                            mazeString += "⌂";
+                            break;
+                        case Cell.Coin:
+                            mazeString += "•";
+                            break;
+                        case Cell.Entry:
+                            mazeString += "♦";
+                            break;
+                        case Cell.Player:
+                            switch (Game.KeyPressed)
+                            {
+                                case Key.Up:
+                                    mazeString += "▲";
+                                    break;
+                                case Key.Down:
+                                    mazeString += "▼";
+                                    break;
+                                case Key.Left:
+                                    mazeString += "◄";
+                                    break;
+                                case Key.Right:
+                                    mazeString += "►";
+                                    break;
+                            }
+                            break;
                     }
                 }
+                mazeString += "\n";
             }
+            PropertyChanged(this, new PropertyChangedEventArgs("MazeString"));
         }
 
-        private void StartMoveEnemy()
+        public string MazeString
         {
-            if (moveEnemy != true)
+            get
             {
-                MoveEnemies.Start();
-                moveEnemy = true;
+                if (mazeString == null)
+                    Game_Show(Game.Maze);
+                return mazeString;
             }
         }
 
-        private void MovePlayer(int[] coodsExit)
-        {
-            Show(Maze);
-            MoveEnemies = new Thread(MoveEnemy);
 
-            int[] coodsEntry = Maze.CoordinatesOfOne(Cell.Entry);
-            Maze[coodsEntry[0]][coodsEntry[1]] = Cell.Player;
-            while (InGame)
+        RelayCommand _startGame;
+        public ICommand StartGame
+        {
+            get
             {
-                KeyEventArgs key = KeyPressed as KeyEventArgs;
-                do
-                {
-                    int[] cur = Maze.CoordinatesOfOne(Cell.Player);//current coords player
-                    switch (key.Key)
-                    {
-                        case Key.Up:
-                            UpPlayer(cur, Maze);
-                            Show(Maze);
-                            StartMoveEnemy();
-                            break;
-                        case Key.Down:
-                            DownPlayer(cur, Maze);
-                            Show(Maze);
-                            StartMoveEnemy();
-                            break;
-                        case Key.Left:
-                            LeftPlayer(cur, Maze);
-                            Show(Maze);
-                            StartMoveEnemy();
-                            break;
-                        case Key.Right:
-                            RightPlayer(cur, Maze);
-                            Show(Maze);
-                            StartMoveEnemy();
-                            break;
-                    }
-                    if (Maze[coodsExit[0]][coodsExit[1]] == Cell.Player) InGame = false;
-                    Thread.Sleep(150);
-                }
-                while (key.Key == (KeyPressed as KeyEventArgs).Key && InGame != false);
+                if (_startGame == null)
+                    _startGame = new RelayCommand(() => Game.StartAsync());
+                return _startGame;
             }
-            moveEnemy = false;
-            MoveEnemies.Abort();
+
         }
 
-        private void CreateEnemies()
-        {
-            List<int[]> coords = Maze.CoordinatesOfMany(Cell.Enemy);
-            Enemies = new List<Enemy>();
-            for (int i = 0; i < coords.Count; i++)
-                Enemies.Add(new Enemy(this, coords[i]));
-        }
+        public ActionCommand<KeyEventArgs> KeyCommand { get { return new ActionCommand<KeyEventArgs>(OnKeyDown); } }
 
-        public void Start()
+        private void OnKeyDown(KeyEventArgs e)
         {
-            do
-            {
-                try
-                {
-                    Maze = MazeRead.ReadLevel(Level);
-                    int[] coodsExit = Maze.CoordinatesOfOne(Cell.Exit);
-                    InGame = true;
-                    MovePlayer(coodsExit);
-                    CompleteLevel();
-                    Level++;
-                    KeyPressed = null;
-                }
-                catch
-                {
-                    EndLevels();
-                    break;
-                }
-            }
-            while (Level <= 3);
-            EndLevels();
-        }
-
-
-        private void KeyDown(object sender, KeyEventArgs e)
-        {
-            KeyPressed = e;
+            if (e.Key != Key.System)
+                Game.KeyPressed = e.Key;
         }
     }
 }

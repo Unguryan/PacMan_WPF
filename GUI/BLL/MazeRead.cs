@@ -18,7 +18,7 @@ namespace GUI.BLL
         ///</summary>
         public static Cell[][] ReadLevel(int levelDig)
         {
-            string str = Directory.GetCurrentDirectory().Replace("GUI\\bin\\Debug", string.Format("BLL\\Levels\\Level{0}.txt", levelDig.ToString()));
+            string str = Directory.GetCurrentDirectory().Replace("bin\\Debug", string.Format("BLL\\Levels\\Level{0}.txt", levelDig.ToString()));
             using (StreamReader sr = new StreamReader(str))
             {
                 Cell[][] Maze;
