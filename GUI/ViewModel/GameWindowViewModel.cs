@@ -61,7 +61,7 @@ namespace GUI.ViewModel
                     switch (Maze[i][j])
                     {
                         case Cell.Empty:
-                            mazeString += "  ";
+                            mazeString += "  ";
                             break;
                         case Cell.Wall:
                             mazeString += "▌";
@@ -73,7 +73,7 @@ namespace GUI.ViewModel
                             mazeString += "⌂";
                             break;
                         case Cell.Coin:
-                            mazeString += "•";
+                            mazeString += "°";
                             break;
                         case Cell.Entry:
                             mazeString += "♦";

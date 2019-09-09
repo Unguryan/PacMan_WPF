@@ -29,8 +29,8 @@
     </i:Interaction.Behaviors>
     
     <Grid>
-        <TextBlock x:Name="TBShow" HorizontalAlignment="Center" Margin="0,10,9.6,51.4" TextWrapping="WrapWithOverflow" TextAlignment="Left" VerticalAlignment="Center" Height="auto" Width="auto" MinHeight="300" MinWidth="300" FontSize="16" Text="{Binding MazeString}"/>
-
+        <Label x:Name="TBShow" HorizontalAlignment="Center" Margin="0,10,9.6,51.4"  VerticalAlignment="Center" Height="auto" Width="auto" MinHeight="300" MinWidth="300" FontSize="16" Content="{Binding MazeString}"/>
+        <!--TextWrapping="WrapWithOverflow" TextAlignment="Left"-->
         <Button Content="start" HorizontalAlignment="Left" Margin="208,441,0,0" VerticalAlignment="Top" Width="75" Command="{Binding StartGame}"/>
 
     </Grid>
